@@ -1,0 +1,52 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".internalstorage.InternalStorageActivity">
+
+<EditText
+    android:id="@+id/edit_username"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="请输入用户名"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+<EditText
+    android:id="@+id/edit_password"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="请输入密码"
+    android:inputType="textPassword"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/edit_username" />
+
+<Button
+    android:id="@+id/btn_save_userMessage"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="保存用户信息"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/edit_password" />
+
+<Button
+    android:id="@+id/btn_read"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="读取用户信息"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/btn_save_userMessage" />
+
+<TextView
+    android:id="@+id/tv_message"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/btn_read" />
+</androidx.constraintlayout.widget.ConstraintLayout>

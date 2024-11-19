@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1785" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1785" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/activity_circle_indicator.xml" value="0.26856884057971014" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/activity_external_storage.xml" value="0.12273550724637682" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/activity_internal_storage.xml" value="0.30480072463768115" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/activity_magic_indicator.xml" value="0.3061594202898551" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/activity_main.xml" value="0.14130434782608695" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/activity_notification.xml" value="0.14130434782608695" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/activity_root_acvitity.xml" value="0.14130434782608695" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/activity_service.xml" value="0.36277173913043476" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/activity_swipe_recycler_view.xml" value="0.36277173913043476" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/activity_view_pager.xml" value="0.36277173913043476" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/activity_xrecycler_view.xml" value="0.36277173913043476" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/fragment_1.xml" value="0.3061594202898551" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/fragment_2.xml" value="0.3061594202898551" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/fragment_3.xml" value="0.3061594202898551" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/header_image.xml" value="0.26856884057971014" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/layout_purple.xml" value="0.36277173913043476" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/layout_white.xml" value="0.36277173913043476" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/layout_yellow.xml" value="0.36277173913043476" />
+        <entry key="..\:/AndroidStudioProjects/SelfTest/app/src/main/res/layout/list_item_layout.xml" value="0.14130434782608695" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

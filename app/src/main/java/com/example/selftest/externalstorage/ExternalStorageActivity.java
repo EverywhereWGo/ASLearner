@@ -1,11 +1,15 @@
 package com.example.selftest.externalstorage;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +18,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -45,6 +54,7 @@ public class ExternalStorageActivity extends AppCompatActivity implements View.O
     private TextView tv_message;
     private Gson gson;
     private Handler handler;
+    private ActivityResultLauncher launcher;
     private static final String FILE_NAME = "external_data.json";
     private static final String ROOT_PATH = Environment.getExternalStorageDirectory().getPath();
     private static final String FOLDER_PATH = "/LMH";
@@ -68,30 +78,67 @@ public class ExternalStorageActivity extends AppCompatActivity implements View.O
         tv_message = findViewById(R.id.tv_message);
         btn_save_userMessage.setOnClickListener(this);
         btn_read.setOnClickListener(this);
+        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    if (Environment.isExternalStorageManager()) {
+                        write2ExternalStorage();
+                    } else {
+                        Log.d(TAG, "没有权限");
+                    }
+                }
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_save_userMessage:
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this
-                            , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
-                            , WRITE_EXTERNAL_STORAGE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    if (Environment.isExternalStorageManager()) {
+                        write2ExternalStorage();
+                    } else {
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                        intent.setData(Uri.parse("package:" + this.getPackageName()));
+                        launcher.launch(intent);
+                    }
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this
+                                , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
+                                , WRITE_EXTERNAL_STORAGE);
+                    } else {
+                        // 如果已经授权就可以直接执行
+                        write2ExternalStorage();
+                    }
                 } else {
-                    // 如果已经授权就可以直接执行
                     write2ExternalStorage();
                 }
+
                 break;
             case R.id.btn_read:
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this
-                            , new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}
-                            , READ_EXTERNAL_STORAGE);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    if (Environment.isExternalStorageManager()) {
+                        readFromExternalStorage();
+                    } else {
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                        intent.setData(Uri.parse("package:" + this.getPackageName()));
+                        launcher.launch(intent);
+                    }
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this
+                                , new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}
+                                , READ_EXTERNAL_STORAGE);
+                    } else {
+                        // 如果已经授权就可以直接执行
+                        readFromExternalStorage();
+                    }
                 } else {
-                    // 如果已经授权就可以直接执行
                     readFromExternalStorage();
                 }
                 break;
@@ -130,7 +177,7 @@ public class ExternalStorageActivity extends AppCompatActivity implements View.O
                 checkExternalStorage();
                 FileInputStream fis = null;
                 try {
-                    File file = new File(ROOT_PATH, FILE_NAME);
+                    File file = new File(ROOT_PATH+FOLDER_PATH, FILE_NAME);
                     if (mExternalStorageAvailable) {
                         fis = new FileInputStream(file);
                         //判断当前文件的字节个数
@@ -182,12 +229,11 @@ public class ExternalStorageActivity extends AppCompatActivity implements View.O
                 try {
                     if (mExternalStorageWrite) {
                         // 创建文件夹
-//                        File file = new File(ROOT_PATH + FOLDER_PATH);
-//                        if(!file.exists()){
-//                            boolean flag = file.mkdirs();
-//                            Log.d(TAG, "flag---->"+flag);
-//                        }
-                        fos = new FileOutputStream(new File(ROOT_PATH, FILE_NAME));
+                        File file = new File(ROOT_PATH + FOLDER_PATH);
+                        if(!file.exists()){
+                            file.mkdirs();
+                        }
+                        fos = new FileOutputStream(new File(ROOT_PATH+FOLDER_PATH, FILE_NAME));
                         // bean -> Json
                         User user = new User(username, password);
                         String jsonStr = gson.toJson(user);

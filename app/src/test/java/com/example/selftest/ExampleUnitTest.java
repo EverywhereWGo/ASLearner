@@ -1,16 +1,17 @@
 package com.example.selftest;
 
 
-
-
 import org.junit.Test;
-
 import static org.junit.Assert.*;
 
+import android.app.Application;
+import android.content.Context;
+import android.util.Log;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
+import androidx.test.core.app.ApplicationProvider;
+
+import com.example.selftest.utils.ScreenUtils;
+
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -18,11 +19,7 @@ import java.util.Map;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
-    @Test
-    public void addition_isCorrect() {
-        assertEquals(4, 2 + 2);
-    }
-
+    private static final String TAG = "ExampleUnitTest";
     @Test
     public void packageTest(){
 

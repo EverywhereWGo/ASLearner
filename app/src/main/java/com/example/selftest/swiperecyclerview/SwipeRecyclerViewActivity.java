@@ -46,5 +46,6 @@ public class SwipeRecyclerViewActivity extends AppCompatActivity {
         });
 
 
+
     }
 }

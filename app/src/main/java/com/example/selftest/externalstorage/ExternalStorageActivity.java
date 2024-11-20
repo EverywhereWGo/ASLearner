@@ -1,5 +1,7 @@
 package com.example.selftest.externalstorage;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -12,7 +14,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.selftest.R;
 import com.example.selftest.internalstorage.User;
@@ -29,6 +34,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class ExternalStorageActivity extends AppCompatActivity implements View.OnClickListener {
+    // 参考：https://blog.csdn.net/qq_24398367/article/details/110947737
     private static final String TAG = "ExternalStorageActivity";
     private ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(5, 10, 5L, TimeUnit.SECONDS,
             new LinkedBlockingDeque<>());
@@ -40,7 +46,10 @@ public class ExternalStorageActivity extends AppCompatActivity implements View.O
     private Gson gson;
     private Handler handler;
     private static final String FILE_NAME = "external_data.json";
-
+    private static final String ROOT_PATH = Environment.getExternalStorageDirectory().getPath();
+    private static final String FOLDER_PATH = "/LMH";
+    private static final int WRITE_EXTERNAL_STORAGE = 1;
+    private static final int READ_EXTERNAL_STORAGE = 2;
     //外部状态可用
     boolean mExternalStorageAvailable = false;
     //外部状态可写
@@ -65,92 +74,141 @@ public class ExternalStorageActivity extends AppCompatActivity implements View.O
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_save_userMessage:
-                String username = edit_username.getText().toString();
-                String password = edit_password.getText().toString();
-                if (TextUtils.isEmpty(username)) {
-                    Toast.makeText(this, "用户名不能为空！", Toast.LENGTH_SHORT).show();
-                    return;
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this
+                            , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}
+                            , WRITE_EXTERNAL_STORAGE);
+                } else {
+                    // 如果已经授权就可以直接执行
+                    write2ExternalStorage();
                 }
-                if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(this, "密码不能为空！", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                threadPoolExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        //首先判断外部存储设备的状态
-                        checkExternalStorage();
-                        FileOutputStream fos = null;
-                        try {
-                            if (mExternalStorageWrite) {
-                                fos = new FileOutputStream(new File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), FILE_NAME));
-                                // bean -> Json
-                                User user = new User(username, password);
-                                String jsonStr = gson.toJson(user);
-                                // 写入内存data/data/包名/files
-                                fos.write(jsonStr.getBytes());
-                            } else {
-                                Log.d(TAG, "外部存储媒介不可用");
-                            }
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } finally {
-                            if (fos != null) {
-                                try {
-                                    fos.close();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }
-                });
-                Toast.makeText(this, "Json文件写入外存成功", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn_read:
-                threadPoolExecutor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        checkExternalStorage();
-                        FileInputStream fis = null;
-                        try {
-                            File file = new File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), FILE_NAME);
-                            if (mExternalStorageAvailable) {
-                                fis = new FileInputStream(file);
-                                //判断当前文件的字节个数
-                                byte[] bytes = new byte[fis.available()];
-                                while (fis.read(bytes) != -1) {
-                                    String jsonStr = new String(bytes);
-                                    User user = gson.fromJson(jsonStr, User.class);
-                                    handler.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            tv_message.setText(jsonStr);
-                                        }
-                                    });
-                                }
-
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
-                            if (fis != null) {
-                                try {
-                                    fis.close();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }
-                });
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this
+                            , new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}
+                            , READ_EXTERNAL_STORAGE);
+                } else {
+                    // 如果已经授权就可以直接执行
+                    readFromExternalStorage();
+                }
                 break;
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case WRITE_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    write2ExternalStorage();
+                } else {
+                    Toast.makeText(this, "没有写入外部内存的权限", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case READ_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    readFromExternalStorage();
+                } else {
+                    Toast.makeText(this, "没有读取外部内存的权限", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void readFromExternalStorage() {
+        threadPoolExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                checkExternalStorage();
+                FileInputStream fis = null;
+                try {
+                    File file = new File(ROOT_PATH, FILE_NAME);
+                    if (mExternalStorageAvailable) {
+                        fis = new FileInputStream(file);
+                        //判断当前文件的字节个数
+                        byte[] bytes = new byte[fis.available()];
+                        while (fis.read(bytes) != -1) {
+                            String jsonStr = new String(bytes);
+                            User user = gson.fromJson(jsonStr, User.class);
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    tv_message.setText(jsonStr);
+                                }
+                            });
+                        }
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (fis != null) {
+                        try {
+                            fis.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+        Toast.makeText(this, "读取成功", Toast.LENGTH_SHORT).show();
+    }
+
+    private void write2ExternalStorage() {
+        String username = edit_username.getText().toString();
+        String password = edit_password.getText().toString();
+        if (TextUtils.isEmpty(username)) {
+            Toast.makeText(this, "用户名不能为空！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            Toast.makeText(this, "密码不能为空！", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        threadPoolExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                checkExternalStorage();
+                FileOutputStream fos = null;
+                try {
+                    if (mExternalStorageWrite) {
+                        // 创建文件夹
+//                        File file = new File(ROOT_PATH + FOLDER_PATH);
+//                        if(!file.exists()){
+//                            boolean flag = file.mkdirs();
+//                            Log.d(TAG, "flag---->"+flag);
+//                        }
+                        fos = new FileOutputStream(new File(ROOT_PATH, FILE_NAME));
+                        // bean -> Json
+                        User user = new User(username, password);
+                        String jsonStr = gson.toJson(user);
+                        fos.write(jsonStr.getBytes());
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (fos != null) {
+                        try {
+                            fos.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
+        Toast.makeText(this, "Json文件写入外存成功", Toast.LENGTH_SHORT).show();
     }
 
     private void checkExternalStorage() {

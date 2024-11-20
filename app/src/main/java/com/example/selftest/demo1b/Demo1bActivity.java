@@ -1,15 +1,19 @@
-package com.example.selftest.magicindicator;
+package com.example.selftest.demo1b;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.LinearLayout;
+
 import com.example.selftest.R;
+import com.example.selftest.magicindicator.Fragment1;
+import com.example.selftest.magicindicator.Fragment2;
+import com.example.selftest.magicindicator.Fragment3;
+
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter;
@@ -17,13 +21,13 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerInd
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorTransitionPagerTitleView;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class MagicIndicatorActivity extends AppCompatActivity {
+public class Demo1bActivity extends AppCompatActivity {
     private ViewPager2 viewPager2;
     private MagicIndicator magicIndicator;
-    private List<Fragment> fragmentList = new ArrayList<>();
     private List<String> titleList = new ArrayList<>();
 
     @Override
@@ -32,16 +36,11 @@ public class MagicIndicatorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_magic_indicator);
         viewPager2 = findViewById(R.id.view_pager);
         magicIndicator = findViewById(R.id.magic_indicator);
-        fragmentList.add(new Fragment1());
-        fragmentList.add(new Fragment2());
-        fragmentList.add(new Fragment3());
         titleList.add("页面1");
         titleList.add("页面2");
         titleList.add("页面3");
-        MyPagerAdapter adapter = new MyPagerAdapter(this);
-        for (int i = 0; i < fragmentList.size(); i++) {
-            adapter.addFragment(fragmentList.get(i));
-        }
+        com.example.selftest.demo1b.MyPagerAdapter adapter = new MyPagerAdapter(this);
+        adapter.addFragment();
         viewPager2.setAdapter(adapter);
         // MagicIndicator
         CommonNavigator commonNavigator = new CommonNavigator(this);
@@ -78,10 +77,6 @@ public class MagicIndicatorActivity extends AppCompatActivity {
             }
         });
         magicIndicator.setNavigator(commonNavigator);
-        // must after setNavigator
-        LinearLayout titleContainer = commonNavigator.getTitleContainer();
-        titleContainer.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-        titleContainer.setGravity(Gravity.CENTER);
         // 将ViewPager2的页面切换与MagicIndicator的指示器状态同步
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override

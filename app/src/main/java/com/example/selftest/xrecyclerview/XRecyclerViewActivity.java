@@ -45,7 +45,7 @@ public class XRecyclerViewActivity extends AppCompatActivity {
         recyclerView.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
         recyclerView.addHeaderView(headerView);
 
-        // 复用SwipeRecyclerView的adapter
+        // adapter
         MyXRecyclerViewAdapter adapter = new MyXRecyclerViewAdapter(dataList);
         recyclerView.setAdapter(adapter);
         // layout

@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.selftest">
 
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
@@ -16,6 +17,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SelfTest">
         <activity
+            android:name=".demo3c.Demo3cActivity"
+            android:exported="false" />
+        <activity
+            android:name=".demo3b.Demo3bActivity"
+            android:exported="false" />
+        <activity
+            android:name=".filletpic.FilletPicActivity"
+            android:exported="false" />
+        <activity
             android:name=".demo1b.Demo1bActivity"
             android:exported="false" />
         <activity
@@ -25,8 +35,9 @@
             android:name=".magicindicator.MagicIndicatorActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="DIALOG_TEST"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="DIALOG_TEST" />
+
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
@@ -58,6 +69,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

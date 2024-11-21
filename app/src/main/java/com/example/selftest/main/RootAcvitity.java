@@ -10,8 +10,12 @@ import android.os.Bundle;
 import com.example.selftest.R;
 import com.example.selftest.circleindicator.CircleIndicatorActivity;
 import com.example.selftest.demo1b.Demo1bActivity;
+import com.example.selftest.demo3b.Demo3bActivity;
+import com.example.selftest.demo3c.Demo3cActivity;
+import com.example.selftest.demo3c.LongPressCircleView;
 import com.example.selftest.dialog.DialogActivity;
 import com.example.selftest.externalstorage.ExternalStorageActivity;
+import com.example.selftest.filletpic.FilletPicActivity;
 import com.example.selftest.internalstorage.InternalStorageActivity;
 import com.example.selftest.magicindicator.MagicIndicatorActivity;
 import com.example.selftest.notification.MainActivity;
@@ -29,7 +33,8 @@ public class RootAcvitity extends AppCompatActivity {
             new MainActivity(), new ServiceActivity(), new ViewPagerActivity()
             , new SwipeRecyclerViewActivity(), new XRecyclerViewActivity(), new InternalStorageActivity()
             , new ExternalStorageActivity(), new MagicIndicatorActivity(), new CircleIndicatorActivity()
-            , new Demo1bActivity(), new DialogActivity()
+            , new Demo1bActivity(), new DialogActivity(), new FilletPicActivity(), new Demo3bActivity()
+            , new Demo3cActivity()
     ));
 
     @Override

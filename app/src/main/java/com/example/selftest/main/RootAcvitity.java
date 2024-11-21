@@ -10,6 +10,7 @@ import android.os.Bundle;
 import com.example.selftest.R;
 import com.example.selftest.circleindicator.CircleIndicatorActivity;
 import com.example.selftest.demo1b.Demo1bActivity;
+import com.example.selftest.dialog.DialogActivity;
 import com.example.selftest.externalstorage.ExternalStorageActivity;
 import com.example.selftest.internalstorage.InternalStorageActivity;
 import com.example.selftest.magicindicator.MagicIndicatorActivity;
@@ -28,7 +29,7 @@ public class RootAcvitity extends AppCompatActivity {
             new MainActivity(), new ServiceActivity(), new ViewPagerActivity()
             , new SwipeRecyclerViewActivity(), new XRecyclerViewActivity(), new InternalStorageActivity()
             , new ExternalStorageActivity(), new MagicIndicatorActivity(), new CircleIndicatorActivity()
-            , new Demo1bActivity()
+            , new Demo1bActivity(), new DialogActivity()
     ));
 
     @Override

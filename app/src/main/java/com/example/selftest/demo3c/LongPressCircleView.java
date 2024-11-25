@@ -59,12 +59,12 @@ public class LongPressCircleView extends View {
         circlePaint.setColor(Color.RED);
         circlePaint.setStrokeWidth(5);
 
-        gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
-            @Override
-            public void onLongPress(MotionEvent e) {
-                onLongPressEvent(e);
-            }
-        });
+//        gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+//            @Override
+//            public void onLongPress(MotionEvent e) {
+//                onLongPressEvent(e);
+//            }
+//        });
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             VibratorManager vibratorManager = (VibratorManager) context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
@@ -96,33 +96,33 @@ public class LongPressCircleView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-//        switch (event.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                pressStartTime = SystemClock.uptimeMillis();
-//                break;
-//            case MotionEvent.ACTION_UP:
-//                Long gapTime = SystemClock.uptimeMillis() - pressStartTime;
-//                if (gapTime >= LONG_PRESS_ACTION_TIME) {
-//                    onLongPressEvent(event);
-//                    if (!isLongPressTriggered) {
-//                        // 如果不是长按，重置状态
-//                        isLongPressTriggered = false;
-//                    } else {
-//                        // TODO
-//                    }
-//                }
-//                break;
-//            default:
-//                break;
-//        }
-        gestureDetector.onTouchEvent(event);
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (!isLongPressTriggered) {
-                isLongPressTriggered = false;
-            } else {
-                // TODO
-            }
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                pressStartTime = SystemClock.uptimeMillis();
+                break;
+            case MotionEvent.ACTION_UP:
+                Long gapTime = SystemClock.uptimeMillis() - pressStartTime;
+                if (gapTime >= LONG_PRESS_ACTION_TIME) {
+                    onLongPressEvent(event);
+                    if (!isLongPressTriggered) {
+                        // 如果不是长按，重置状态
+                        isLongPressTriggered = false;
+                    } else {
+                        // TODO
+                    }
+                }
+                break;
+            default:
+                break;
         }
+//        gestureDetector.onTouchEvent(event);
+//        if (event.getAction() == MotionEvent.ACTION_UP) {
+//            if (!isLongPressTriggered) {
+//                isLongPressTriggered = false;
+//            } else {
+//                // TODO
+//            }
+//        }
 
         return true;
     }

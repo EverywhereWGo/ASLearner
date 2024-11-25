@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.example.selftest.demo5.ChildPresenter
         android:id="@+id/recycler_view_demo1b"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

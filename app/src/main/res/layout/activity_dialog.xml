@@ -14,5 +14,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <EditText
+        android:id="@+id/editText_input2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入字符串"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/dialog_button_demo2"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

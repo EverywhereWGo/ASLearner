@@ -26,7 +26,7 @@ public class FilletPicActivity extends AppCompatActivity {
         imageView1 = findViewById(R.id.fillet_image_view1);
         imageView2 = findViewById(R.id.fillet_image_view2);
         imageView3 = findViewById(R.id.fillet_image_view3);
-        // 方式一：通过Shape
+        // 方式一：自定义View
         imageView1.setImageResource(R.drawable.lyy);
         // 方式二：ViewOutlineProvider
         imageView2.setOutlineProvider(new ViewOutlineProvider() {
@@ -40,6 +40,7 @@ public class FilletPicActivity extends AppCompatActivity {
         });
         imageView2.setClipToOutline(true);
         imageView2.setImageResource(R.drawable.lyy);
+
         // 方式三 Glide
         // 设置圆角半径为10dp
         int radius = 30;

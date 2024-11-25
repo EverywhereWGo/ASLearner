@@ -177,7 +177,7 @@ public class ExternalStorageActivity extends AppCompatActivity implements View.O
                 checkExternalStorage();
                 FileInputStream fis = null;
                 try {
-                    File file = new File(ROOT_PATH+FOLDER_PATH, FILE_NAME);
+                    File file = new File(ROOT_PATH + FOLDER_PATH, FILE_NAME);
                     if (mExternalStorageAvailable) {
                         fis = new FileInputStream(file);
                         //判断当前文件的字节个数
@@ -230,10 +230,10 @@ public class ExternalStorageActivity extends AppCompatActivity implements View.O
                     if (mExternalStorageWrite) {
                         // 创建文件夹
                         File file = new File(ROOT_PATH + FOLDER_PATH);
-                        if(!file.exists()){
+                        if (!file.exists()) {
                             file.mkdirs();
                         }
-                        fos = new FileOutputStream(new File(ROOT_PATH+FOLDER_PATH, FILE_NAME));
+                        fos = new FileOutputStream(new File(ROOT_PATH + FOLDER_PATH, FILE_NAME));
                         // bean -> Json
                         User user = new User(username, password);
                         String jsonStr = gson.toJson(user);

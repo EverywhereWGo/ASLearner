@@ -17,6 +17,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SelfTest">
         <activity
+            android:name=".demo5.Demo5Activity"
+            android:exported="false" />
+        <activity
+            android:name=".demo4b.Demo4bActivity"
+            android:exported="false" />
+        <activity
+            android:name=".downloadbutton.DownloadButtonActivity"
+            android:exported="false" />
+        <activity
+            android:name=".demo4a.Demo4aActivity"
+            android:exported="false" />
+        <activity
+            android:name=".demo3d.Demo3dActivity"
+            android:exported="false" />
+        <activity
             android:name=".demo3c.Demo3cActivity"
             android:exported="false" />
         <activity

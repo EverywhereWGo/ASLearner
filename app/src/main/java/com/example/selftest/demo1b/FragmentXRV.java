@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,8 +39,15 @@ public class FragmentXRV extends Fragment {
         // layout
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         xRecyclerView.setLayoutManager(linearLayoutManager);
-        //
+        // itemDecoration
         xRecyclerView.addItemDecoration(new MyItemDecoration(getContext(), 5));
+        // header
+        View headerView = getLayoutInflater().inflate(R.layout.header_image, null);
+        ImageView headerImage = headerView.findViewById(R.id.header_image_view);
+        headerImage.setImageResource(R.drawable.lyy);
+        xRecyclerView.addHeaderView(headerView);
+        // footer
+        xRecyclerView.getDefaultFootView().removeAllViews();
         // refresh
         xRecyclerView.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
         xRecyclerView.setLoadingMoreProgressStyle(ProgressStyle.BallSpinFadeLoader);

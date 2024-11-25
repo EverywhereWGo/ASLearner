@@ -1,32 +1,42 @@
 package com.example.selftest.dialog;
 
-import android.app.Dialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
+import android.view.WindowInsetsController;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.example.selftest.R;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class MyDialog extends AlertDialog {
+    private static final String TAG = "MyDialog";
     private TextView tvCancel;
     private TextView tvConfirm;
     private TextView tvTitle;
     private TextView tvContent;
+    private ImageView ivClose;
     private EditText etInput;
     private String title;
     private String message;
@@ -41,6 +51,14 @@ public class MyDialog extends AlertDialog {
         super(context, themeResId);
     }
 
+    public MyDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
+        super(context, cancelable, cancelListener);
+    }
+
+    public MyDialog(@NonNull Context context) {
+        super(context);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,13 +71,13 @@ public class MyDialog extends AlertDialog {
         initEvent();
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            return true;
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
 
     private void initEvent() {
         tvCancel.setOnClickListener(new View.OnClickListener() {
@@ -89,14 +107,36 @@ public class MyDialog extends AlertDialog {
                 dismiss();
             }
         });
+        ivClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+//        etInput.setOnClickListener(new View.OnClickListener() {
+//            @RequiresApi(api = Build.VERSION_CODES.R)
+//            @Override
+//            public void onClick(View v) {
+////                // 获取EditText对应的WindowInsetsController
+////                WindowInsetsController windowInsetsController = etInput.getWindowInsetsController();
+////
+////                if (windowInsetsController!= null) {
+////                    // 显示输入法相关的窗口插入内容
+////                    windowInsetsController.show(WindowInsetsCompat.Type.ime());
+////                }
+//                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                boolean isOpen = imm.isActive();
+//                Log.d(TAG, "isOpen->"+isOpen);
+//            }
+//        });
     }
 
     private void initText() {
         if (!TextUtils.isEmpty(title)) {
-            tvTitle.setText("title");
+            tvTitle.setText(title);
         }
         if (!TextUtils.isEmpty(message)) {
-            tvContent.setText("message");
+            tvContent.setText(message);
         }
         if (!TextUtils.isEmpty(cancel)) {
             tvCancel.setText("取消");
@@ -113,6 +153,7 @@ public class MyDialog extends AlertDialog {
         tvTitle = findViewById(R.id.tv_title);
         tvContent = findViewById(R.id.tv_content);
         etInput = findViewById(R.id.editText_input);
+        ivClose = findViewById(R.id.close_icon);
     }
 
     private void setDialogStartPosition() {
@@ -163,5 +204,9 @@ public class MyDialog extends AlertDialog {
     public MyDialog setTitle(String title) {
         this.title = title;
         return this;
+    }
+
+    public EditText getEditText() {
+        return etInput;
     }
 }

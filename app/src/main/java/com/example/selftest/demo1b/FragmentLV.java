@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -38,6 +39,10 @@ public class FragmentLV extends Fragment {
         listView.setAdapter(adapter);
         listView.setDivider(new ColorDrawable(Color.WHITE));
         listView.setDividerHeight(dpToPx(5));
+        View headerView = getLayoutInflater().inflate(R.layout.header_image, null);
+        ImageView headerImage = headerView.findViewById(R.id.header_image_view);
+        headerImage.setImageResource(R.drawable.lyy);
+        listView.addHeaderView(headerImage);
         return view;
     }
 

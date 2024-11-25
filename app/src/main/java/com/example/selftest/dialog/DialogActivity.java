@@ -1,30 +1,35 @@
 package com.example.selftest.dialog;
 
-import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.selftest.R;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 /**
  * @author LMH
  */
 public class DialogActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "DialogActivity";
-    MyDialog myDialog;
-    Button mBtn;
-
+    private MyDialog myDialog;
+    private Button mBtn;
+    private boolean isRegistered = false;
+    
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,12 +37,20 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
         mBtn = findViewById(R.id.dialog_button_demo2);
         mBtn.setOnClickListener(this);
         // 注册EventBus订阅者
-        EventBus.getDefault().register(this);
+        if (!isRegistered) {
+            EventBus.getDefault().register(this);
+            isRegistered = true;
+        } else {
+            // 返回其他失败处理或者提示
+        }
     }
 
     @Override
     protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
+        if (isRegistered) {
+            EventBus.getDefault().unregister(this);
+            isRegistered = false;
+        }
         super.onDestroy();
     }
 
@@ -55,8 +68,8 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.dialog_button_demo2:
                 myDialog = new MyDialog(this, R.style.MyDialog)
-                        .setMessage("这是消息")
-                        .setTitle("这是标题")
+                        .setMessage("这里展示信息")
+                        .setTitle("出售")
                         .setConfirmCallBack("确认!", new MyDialog.OnConfirmCallback() {
                             @Override
                             public void onConfirm(MyDialog dialog) {

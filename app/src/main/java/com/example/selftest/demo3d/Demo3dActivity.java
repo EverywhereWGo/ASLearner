@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,7 @@ public class Demo3dActivity extends AppCompatActivity {
     Button mReset;
     Button mBorder;
     SeekBar mSeekBar;
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +67,10 @@ public class Demo3dActivity extends AppCompatActivity {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
             }
         });
     }
@@ -80,13 +80,17 @@ public class Demo3dActivity extends AppCompatActivity {
         if (mDownloadProgressButton.getProgress() + 10 > 100) {
             mDownloadProgressButton.setState(DownloadProgressButton.STATE_FINISH);
             mDownloadProgressButton.setCurrentText("安装中");
-            new Handler().postDelayed(new Runnable() {
+            mDownloadProgressButton.setClickable(false);
+            handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     mDownloadProgressButton.setState(DownloadProgressButton.STATE_NORMAL);
-                    mDownloadProgressButton.setCurrentText("打开");
+                    mDownloadProgressButton.setCurrentText("安装");
+                    mDownloadProgressButton.setProgress(0);
+                    mDownloadProgressButton.setClickable(true);
                 }
             }, 2000);
+
 
         }
 
@@ -103,6 +107,13 @@ public class Demo3dActivity extends AppCompatActivity {
             return;
         }
 
+    }
 
+    @Override
+    protected void onDestroy() {
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+        }
+        super.onDestroy();
     }
 }

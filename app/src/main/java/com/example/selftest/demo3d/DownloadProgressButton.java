@@ -24,22 +24,14 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
- *
  * @author LMH
  * @date 17-2-20
  */
 
 public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatTextView {
 
-    /**
-     * 背景画笔
-     */
     private Paint mBackgroundPaint;
-    /**
-     * 按钮文字画笔
-     */
     private volatile Paint mTextPaint;
-
     //背景颜色
     private int mBackgroundColor;
     //下载中后半部分后面背景颜色
@@ -48,25 +40,13 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
     private int mTextColor;
     //覆盖后颜色
     private int mTextCoverColor;
-
     private float mButtonRadius;
-    //边框宽度
     private float mBorderWidth;
-    //点动画样式
-    private int mBallStyle = STYLE_BALL_JUMP;
-
     private float mProgress = -1;
     private float mToProgress;
     private int mMaxProgress;
     private int mMinProgress;
     private float mProgressPercent;
-
-    private float mTextRightBorder;
-    private float mTextBottomBorder;
-    //点的间隙
-    private float mBallSpacing = 4;
-    //点的半径
-    private float mBallRadius = 6;
     //是否显示边框，默认是true
     private boolean showBorder;
     private RectF mBackgroundBounds;
@@ -78,26 +58,11 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
     //记录当前文字
     private CharSequence mCurrentText;
 
-    public static final int STATE_NORMAL = 0;//开始下载
-    public static final int STATE_DOWNLOADING = 1;//下载之中
-    public static final int STATE_PAUSE = 2;//暂停下载
-    public static final int STATE_FINISH = 3;//下载完成
-
-    public static final int STYLE_BALL_PULSE = 1;
-    public static final int STYLE_BALL_JUMP = 2;
-
+    public static final int STATE_NORMAL = 0;
+    public static final int STATE_DOWNLOADING = 1;
+    public static final int STATE_PAUSE = 2;
+    public static final int STATE_FINISH = 3;
     private int mState;
-    //点运动动画
-    private ArrayList<ValueAnimator> mAnimators;
-
-    public static final float SCALE = 1.0f;
-
-    private float[] scaleFloats = new float[]{SCALE,
-            SCALE,
-            SCALE};
-
-    private float[] translateYFloats = new float[3];
-
     public DownloadProgressButton(Context context) {
         this(context, null);
     }
@@ -124,25 +89,20 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
             mTextColor = a.getColor(R.styleable.DownloadProgressButton_progress_btn_text_color, mBackgroundColor);
             mTextCoverColor = a.getColor(R.styleable.DownloadProgressButton_progress_btn_text_cover_color, Color.WHITE);
             mBorderWidth = a.getDimension(R.styleable.DownloadProgressButton_progress_btn_border_width, dp2px(2));
-            mBallStyle = a.getInt(R.styleable.DownloadProgressButton_progress_btn_ball_style, STYLE_BALL_JUMP);
         } finally {
             a.recycle();
         }
     }
 
     private void init() {
-
         mMaxProgress = 100;
         mMinProgress = 0;
         mProgress = 0;
-
         showBorder = true;
-
         //设置背景画笔
         mBackgroundPaint = new Paint();
         mBackgroundPaint.setAntiAlias(true);
         mBackgroundPaint.setStyle(Paint.Style.FILL);
-
         //设置文字画笔
         mTextPaint = new Paint();
         mTextPaint.setAntiAlias(true);
@@ -151,7 +111,6 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
             //解决文字有时候画不出问题
             setLayerType(LAYER_TYPE_SOFTWARE, mTextPaint);
         }
-
         //初始化状态设为NORMAL
         mState = STATE_NORMAL;
         invalidate();
@@ -169,7 +128,6 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
             }
         });
 
-        setBallStyle(mBallStyle);
     }
 
     @Override
@@ -204,6 +162,7 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
         //color
         switch (mState) {
             case STATE_NORMAL:
+            case STATE_FINISH:
                 mBackgroundPaint.setColor(mBackgroundColor);
                 canvas.drawRoundRect(mBackgroundBounds, mButtonRadius, mButtonRadius, mBackgroundPaint);
                 break;
@@ -226,9 +185,7 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
                 canvas.restore();
                 mBackgroundPaint.setXfermode(null);
                 break;
-            case STATE_FINISH:
-                mBackgroundPaint.setColor(mBackgroundColor);
-                canvas.drawRoundRect(mBackgroundBounds, mButtonRadius, mButtonRadius, mBackgroundPaint);
+            default:
                 break;
         }
     }
@@ -240,8 +197,6 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
             mCurrentText = "";
         }
         final float textWidth = mTextPaint.measureText(mCurrentText.toString());
-        mTextBottomBorder = y;
-        mTextRightBorder = (getMeasuredWidth() + textWidth) / 2;
         //color
         switch (mState) {
             case STATE_NORMAL:
@@ -251,7 +206,6 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
                 break;
             case STATE_PAUSE:
             case STATE_DOWNLOADING:
-
                 //进度条压过距离
                 float coverLength = getMeasuredWidth() * mProgressPercent;
                 //开始渐变指示器
@@ -281,103 +235,23 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
             case STATE_FINISH:
                 mTextPaint.setColor(mTextCoverColor);
                 canvas.drawText(mCurrentText.toString(), (getMeasuredWidth() - textWidth) / 2, y, mTextPaint);
-                drawLoadingBall(canvas);
                 break;
-
+            default:
+                break;
         }
 
     }
-
-    public void drawLoadingBall(Canvas canvas) {
-        for (int i = 0; i < 3; i++) {
-            canvas.save();
-            float translateX = mTextRightBorder + 10 + (mBallRadius * 2) * i + mBallSpacing * i;
-            canvas.translate(translateX, mTextBottomBorder);
-            canvas.drawCircle(0, translateYFloats[i], mBallRadius * scaleFloats[i], mTextPaint);
-            canvas.restore();
-        }
-    }
-
-    private void startAnimators() {
-        for (int i = 0; i < mAnimators.size(); i++) {
-            ValueAnimator animator = mAnimators.get(i);
-            animator.start();
-        }
-    }
-
-    private void stopAnimators() {
-        if (mAnimators != null) {
-            for (ValueAnimator animator : mAnimators) {
-                if (animator != null && animator.isStarted()) {
-                    animator.end();
-                }
-            }
-        }
-    }
-
-
-    public ArrayList<ValueAnimator> createBallPulseAnimators() {
-        ArrayList<ValueAnimator> animators = new ArrayList<>();
-        int[] delays = new int[]{120, 240, 360};
-        for (int i = 0; i < 3; i++) {
-            final int index = i;
-
-            ValueAnimator scaleAnim = ValueAnimator.ofFloat(1, 0.3f, 1);
-
-            scaleAnim.setDuration(750);
-            scaleAnim.setRepeatCount(-1);
-            scaleAnim.setStartDelay(delays[i]);
-
-            scaleAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    scaleFloats[index] = (float) animation.getAnimatedValue();
-                    postInvalidate();
-                }
-            });
-            animators.add(scaleAnim);
-        }
-        return animators;
-    }
-
-    public ArrayList<ValueAnimator> createBallJumpAnimators() {
-        ArrayList<ValueAnimator> animators = new ArrayList<>();
-        int[] delays = new int[]{70, 140, 210};
-        for (int i = 0; i < 3; i++) {
-            final int index = i;
-            ValueAnimator scaleAnim = ValueAnimator.ofFloat(mTextBottomBorder, mTextBottomBorder - mBallRadius * 2, mTextBottomBorder);
-            scaleAnim.setDuration(600);
-            scaleAnim.setRepeatCount(-1);
-            scaleAnim.setStartDelay(delays[i]);
-            scaleAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    translateYFloats[index] = (float) animation.getAnimatedValue();
-                    postInvalidate();
-                }
-            });
-            animators.add(scaleAnim);
-        }
-        return animators;
-    }
-
 
     public int getState() {
         return mState;
     }
 
     public void setState(int state) {
-        if (mState != state) {//状态确实有改变
+        //状态确实有改变
+        if (mState != state) {
             this.mState = state;
             invalidate();
-            if (state == STATE_FINISH) {
-                //开启点动画
-                startAnimators();
-            } else {
-                stopAnimators();
-            }
         }
-
     }
 
     /**
@@ -413,16 +287,6 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
         }
     }
 
-
-    //设置点动画样式
-    private void setBallStyle(int mBallStyle) {
-        this.mBallStyle = mBallStyle;
-        if (mBallStyle == STYLE_BALL_PULSE) {
-            mAnimators = createBallPulseAnimators();
-        } else {
-            mAnimators = createBallJumpAnimators();
-        }
-    }
 
     public boolean isShowBorder() {
         return showBorder;
@@ -460,8 +324,7 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
         return mTextColor;
     }
 
-    @Override
-    public void setTextColor(int textColor) {
+    public void setmTextColor(int textColor) {
         mTextColor = textColor;
     }
 
@@ -489,62 +352,62 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
         mMaxProgress = maxProgress;
     }
 
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        SavedState ss = (SavedState) state;
-        super.onRestoreInstanceState(ss.getSuperState());
-        mState = ss.state;
-        mProgress = ss.progress;
-        mCurrentText = ss.currentText;
-    }
-
-    @Override
-    public Parcelable onSaveInstanceState() {
-        Parcelable superState = super.onSaveInstanceState();
-        return new SavedState(superState, (int) mProgress, mState, mCurrentText.toString());
-    }
-
-    public static class SavedState extends BaseSavedState {
-
-        private int progress;
-        private int state;
-        private String currentText;
-
-        public SavedState(Parcelable parcel, int progress, int state, String currentText) {
-            super(parcel);
-            this.progress = progress;
-            this.state = state;
-            this.currentText = currentText;
-        }
-
-        private SavedState(Parcel in) {
-            super(in);
-            progress = in.readInt();
-            state = in.readInt();
-            currentText = in.readString();
-        }
-
-        @Override
-        public void writeToParcel(Parcel out, int flags) {
-            super.writeToParcel(out, flags);
-            out.writeInt(progress);
-            out.writeInt(state);
-            out.writeString(currentText);
-        }
-
-        public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
-
-            @Override
-            public SavedState createFromParcel(Parcel in) {
-                return new SavedState(in);
-            }
-
-            @Override
-            public SavedState[] newArray(int size) {
-                return new SavedState[size];
-            }
-        };
-    }
+//    @Override
+//    public void onRestoreInstanceState(Parcelable state) {
+//        SavedState ss = (SavedState) state;
+//        super.onRestoreInstanceState(ss.getSuperState());
+//        mState = ss.state;
+//        mProgress = ss.progress;
+//        mCurrentText = ss.currentText;
+//    }
+//
+//    @Override
+//    public Parcelable onSaveInstanceState() {
+//        Parcelable superState = super.onSaveInstanceState();
+//        return new SavedState(superState, (int) mProgress, mState, mCurrentText.toString());
+//    }
+//
+//    public static class SavedState extends BaseSavedState {
+//
+//        private int progress;
+//        private int state;
+//        private String currentText;
+//
+//        public SavedState(Parcelable parcel, int progress, int state, String currentText) {
+//            super(parcel);
+//            this.progress = progress;
+//            this.state = state;
+//            this.currentText = currentText;
+//        }
+//
+//        private SavedState(Parcel in) {
+//            super(in);
+//            progress = in.readInt();
+//            state = in.readInt();
+//            currentText = in.readString();
+//        }
+//
+//        @Override
+//        public void writeToParcel(Parcel out, int flags) {
+//            super.writeToParcel(out, flags);
+//            out.writeInt(progress);
+//            out.writeInt(state);
+//            out.writeString(currentText);
+//        }
+//
+//        public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
+//
+//            @Override
+//            public SavedState createFromParcel(Parcel in) {
+//                return new SavedState(in);
+//            }
+//
+//            @Override
+//            public SavedState[] newArray(int size) {
+//                return new SavedState[size];
+//            }
+//        };
+//    }
 
     private int dp2px(int dp) {
         float density = getContext().getResources().getDisplayMetrics().density;

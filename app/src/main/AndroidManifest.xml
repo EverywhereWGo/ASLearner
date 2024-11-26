@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SelfTest">
         <activity
+            android:name=".demo6.Demo6Activity"
+            android:exported="false" />
+        <activity
             android:name=".demo5.Demo5Activity"
             android:exported="false" />
         <activity

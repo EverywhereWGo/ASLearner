@@ -1,36 +1,24 @@
 package com.example.selftest.dialog;
 
+import android.app.Dialog;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowInsetsController;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
-
 import com.example.selftest.R;
-
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.Timer;
-import java.util.TimerTask;
 
-public class MyDialog extends AlertDialog {
+public class MyDialog extends Dialog {
     private static final String TAG = "MyDialog";
     private TextView tvCancel;
     private TextView tvConfirm;

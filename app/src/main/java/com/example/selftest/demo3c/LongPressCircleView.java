@@ -33,7 +33,7 @@ public class LongPressCircleView extends View {
     private Circle longPressCircle;
     private Context context;
     private Long pressStartTime;
-    private static final Long LONG_PRESS_ACTION_TIME = 2000L;
+    private static final Long LONG_PRESS_ACTION_TIME = 1000L;
 
     public LongPressCircleView(Context context) {
         super(context);

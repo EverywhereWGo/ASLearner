@@ -15,7 +15,7 @@
         android:textColor="@android:color/white"
         app:normalBackground="@drawable/rect_normal_bg"
         app:downLoadedBackground="@drawable/rect_downloaded_bg"
-        app:downLoadCompleteBackground="@drawable/rect_downloaded_bg"
+        app:downLoadCompleteBackground="@drawable/rect_complete_bg"
         android:textSize="20sp"
         app:textColor="#FFFFFFFF"
         />

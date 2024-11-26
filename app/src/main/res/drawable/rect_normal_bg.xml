@@ -11,6 +11,6 @@
         android:color="#000000" />
 
     <!-- 设置四个角的圆角半径，这里设置为5像素 -->
-    <corners android:radius="5dp" />
+    <corners android:radius="31dp" />
 
 </shape>

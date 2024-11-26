@@ -8,6 +8,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -80,7 +81,15 @@ public class CustomView extends FrameLayout {
                 isDragging = false;
                 break;
             case MotionEvent.ACTION_MOVE:
-                isDragging = true;
+                float diffX = ev.getRawX() - this.getX() - mLastX;
+                Log.d(TAG, "diffX->"+diffX);
+                float diffY = ev.getRawY() - this.getY() - mLastY;
+                Log.d(TAG, "diffY->"+diffY);
+                int touchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+                Log.d(TAG, "touchSlop->"+touchSlop);
+                if (diffX > touchSlop || diffY > touchSlop) {
+                    isDragging = true;
+                }
                 break;
             default:
                 break;

@@ -20,6 +20,7 @@ public class Demo4aActivity extends AppCompatActivity {
     ImageView draggableImageView;
     Integer screenWidth;
     Integer screenHeight;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,21 +30,22 @@ public class Demo4aActivity extends AppCompatActivity {
         Resources resources = this.getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();
         screenWidth = dm.widthPixels;
-        screenHeight = dm.heightPixels-110;
-        Log.d(TAG, "screenWidth->"+screenWidth);
-        Log.d(TAG, "screenHeight->"+screenHeight);
+        screenHeight = dm.heightPixels - 110;
+        Log.d(TAG, "screenWidth->" + screenWidth);
+        Log.d(TAG, "screenHeight->" + screenHeight);
         draggableImageView.setOnTouchListener(new View.OnTouchListener() {
-            private float dX,dY;
+            private float dX, dY;
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        dX = v.getX()-event.getRawX();
-                        dY = v.getY()-event.getRawY();
+                        dX = v.getX() - event.getRawX();
+                        dY = v.getY() - event.getRawY();
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        float newX = Math.max(0,Math.min(event.getRawX()+dX,screenWidth-v.getWidth()));
-                        float newY = Math.max(0,Math.min(event.getRawY()+dY,screenHeight-v.getHeight()));
+                        float newX = Math.max(0, Math.min(event.getRawX() + dX, screenWidth - v.getWidth()));
+                        float newY = Math.max(0, Math.min(event.getRawY() + dY, screenHeight - v.getHeight()));
                         v.animate()
                                 .x(newX)
                                 .y(newY)

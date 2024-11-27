@@ -81,7 +81,10 @@
             android:name=".service.MyService"
             android:enabled="true"
             android:exported="true" />
-
+        <service
+            android:name=".demo6.DownloadService"
+            android:enabled="true"
+            android:exported="false" />
         <activity
             android:name=".main.RootAcvitity"
             android:exported="true">
@@ -92,10 +95,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".notification.NotificationActivity"
+            android:name=".notification.NotifActivity"
             android:exported="false" />
         <activity
-            android:name=".notification.MainActivity"
+            android:name=".notification.NotificationActivity"
             android:exported="true" />
         <activity android:name=".dialog.DialogActivity" />
     </application>

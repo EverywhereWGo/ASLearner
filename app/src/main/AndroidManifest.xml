@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SelfTest">
         <activity
+            android:name=".demo7.Demo7Activity"
+            android:exported="false" />
+        <activity
             android:name=".demo6.Demo6Activity"
             android:exported="false" />
         <activity
@@ -85,6 +88,7 @@
             android:name=".demo6.DownloadService"
             android:enabled="true"
             android:exported="false" />
+
         <activity
             android:name=".main.RootAcvitity"
             android:exported="true">

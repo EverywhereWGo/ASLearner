@@ -45,8 +45,6 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
     private float mProgressPercent;
     //是否显示边框，默认是true
     private boolean showBorder;
-    private RectF mBackgroundBounds;
-    private LinearGradient mProgressTextGradient;
 
     //下载平滑动画
     private ValueAnimator mProgressAnimation;
@@ -59,6 +57,7 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
     public static final int STATE_PAUSE = 2;
     public static final int STATE_FINISH = 3;
     private int mState;
+
     public DownloadProgressButton(Context context) {
         this(context, null);
     }
@@ -103,10 +102,8 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
         mTextPaint = new Paint();
         mTextPaint.setAntiAlias(true);
         mTextPaint.setTextSize(50f);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            //解决文字有时候画不出问题
-            setLayerType(LAYER_TYPE_SOFTWARE, mTextPaint);
-        }
+        //解决文字有时候画不出问题
+        setLayerType(LAYER_TYPE_SOFTWARE, mTextPaint);
         //初始化状态设为NORMAL
         mState = STATE_NORMAL;
         invalidate();
@@ -141,7 +138,7 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
 
     private void drawBackground(Canvas canvas) {
 
-        mBackgroundBounds = new RectF();
+        RectF mBackgroundBounds = new RectF();
         //根据Border宽度得到Button的显示区域
         mBackgroundBounds.left = showBorder ? mBorderWidth : 0;
         mBackgroundBounds.top = showBorder ? mBorderWidth : 0;
@@ -188,7 +185,7 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
 
     private void drawTextAbove(Canvas canvas) {
         //计算Baseline绘制的Y坐标
-        final float y = canvas.getHeight() / 2 - (mTextPaint.descent() / 2 + mTextPaint.ascent() / 2);
+        final float y = canvas.getHeight() * 1.0f / 2 - (mTextPaint.descent() / 2 + mTextPaint.ascent() / 2);
         if (mCurrentText == null) {
             mCurrentText = "";
         }
@@ -205,18 +202,18 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
                 //进度条压过距离
                 float coverLength = getMeasuredWidth() * mProgressPercent;
                 //开始渐变指示器
-                float indicator1 = getMeasuredWidth() / 2 - textWidth / 2;
+                float indicator1 = getMeasuredWidth() * 1.0f / 2 - textWidth / 2;
                 //结束渐变指示器
-                float indicator2 = getMeasuredWidth() / 2 + textWidth / 2;
+                float indicator2 = getMeasuredWidth() * 1.0f / 2 + textWidth / 2;
                 //文字变色部分的距离
-                float coverTextLength = textWidth / 2 - getMeasuredWidth() / 2 + coverLength;
+                float coverTextLength = textWidth / 2 - getMeasuredWidth() * 1.0f / 2 + coverLength;
                 float textProgress = coverTextLength / textWidth;
                 if (coverLength <= indicator1) {
                     mTextPaint.setShader(null);
                     mTextPaint.setColor(mTextColor);
                 } else if (indicator1 < coverLength && coverLength <= indicator2) {
                     //设置变色效果
-                    mProgressTextGradient = new LinearGradient((getMeasuredWidth() - textWidth) / 2, 0, (getMeasuredWidth() + textWidth) / 2, 0,
+                    LinearGradient mProgressTextGradient = new LinearGradient((getMeasuredWidth() - textWidth) / 2, 0, (getMeasuredWidth() + textWidth) / 2, 0,
                             new int[]{mTextCoverColor, mTextColor},
                             new float[]{textProgress, textProgress + 0.001f},
                             Shader.TileMode.CLAMP);
@@ -348,62 +345,6 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
         mMaxProgress = maxProgress;
     }
 
-//    @Override
-//    public void onRestoreInstanceState(Parcelable state) {
-//        SavedState ss = (SavedState) state;
-//        super.onRestoreInstanceState(ss.getSuperState());
-//        mState = ss.state;
-//        mProgress = ss.progress;
-//        mCurrentText = ss.currentText;
-//    }
-//
-//    @Override
-//    public Parcelable onSaveInstanceState() {
-//        Parcelable superState = super.onSaveInstanceState();
-//        return new SavedState(superState, (int) mProgress, mState, mCurrentText.toString());
-//    }
-//
-//    public static class SavedState extends BaseSavedState {
-//
-//        private int progress;
-//        private int state;
-//        private String currentText;
-//
-//        public SavedState(Parcelable parcel, int progress, int state, String currentText) {
-//            super(parcel);
-//            this.progress = progress;
-//            this.state = state;
-//            this.currentText = currentText;
-//        }
-//
-//        private SavedState(Parcel in) {
-//            super(in);
-//            progress = in.readInt();
-//            state = in.readInt();
-//            currentText = in.readString();
-//        }
-//
-//        @Override
-//        public void writeToParcel(Parcel out, int flags) {
-//            super.writeToParcel(out, flags);
-//            out.writeInt(progress);
-//            out.writeInt(state);
-//            out.writeString(currentText);
-//        }
-//
-//        public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
-//
-//            @Override
-//            public SavedState createFromParcel(Parcel in) {
-//                return new SavedState(in);
-//            }
-//
-//            @Override
-//            public SavedState[] newArray(int size) {
-//                return new SavedState[size];
-//            }
-//        };
-//    }
 
     private int dp2px(int dp) {
         float density = getContext().getResources().getDisplayMetrics().density;

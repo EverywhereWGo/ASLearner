@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -66,30 +67,34 @@ public class Demo6Activity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.download_bt:
-                switch (downloadProgressButton.getState()) {
-                    case STATE_NORMAL:
-                        startDownload();
-                        break;
-                    case STATE_DOWNLOADING:
-                        downloadBinder.pauseDownload();
-                        downloadProgressButton.setState(STATE_PAUSE);
-                        break;
-                    case STATE_PAUSE:
-                        downloadBinder.resumeDownload();
-                        downloadProgressButton.setState(STATE_DOWNLOADING);
-                        break;
-                    case STATE_FINISH:
-                        downloadProgressButton.setState(STATE_NORMAL);
-                        downloadProgressButton.setCurrentText("安装");
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            default:
-                break;
+        try {
+            switch (v.getId()) {
+                case R.id.download_bt:
+                    switch (downloadProgressButton.getState()) {
+                        case STATE_NORMAL:
+                            startDownload();
+                            break;
+                        case STATE_DOWNLOADING:
+                            downloadBinder.pauseDownload();
+                            downloadProgressButton.setState(STATE_PAUSE);
+                            break;
+                        case STATE_PAUSE:
+                            downloadBinder.resumeDownload();
+                            downloadProgressButton.setState(STATE_DOWNLOADING);
+                            break;
+                        case STATE_FINISH:
+                            downloadProgressButton.setState(STATE_NORMAL);
+                            downloadProgressButton.setCurrentText("安装");
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -113,7 +118,6 @@ public class Demo6Activity extends AppCompatActivity implements View.OnClickList
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCompletedEvent(CompletedDownloadEvent event) {
         downloadProgressButton.setState(com.example.selftest.demo3d.DownloadProgressButton.STATE_FINISH);
-
         downloadProgressButton.setCurrentText("下载完成");
     }
 

@@ -171,7 +171,7 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
                 //计算当前的进度
                 mProgressPercent = mProgress / (mMaxProgress + 0f);
                 mBackgroundPaint.setColor(mBackgroundSecondColor);
-                canvas.save();
+//                canvas.save();
                 //画出dst图层
                 canvas.drawRoundRect(mBackgroundBounds, mButtonRadius, mButtonRadius, mBackgroundPaint);
                 //设置图层显示模式为 SRC_ATOP
@@ -182,7 +182,7 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
                 float right = mBackgroundBounds.right * mProgressPercent;
                 //在dst画出src矩形
                 canvas.drawRect(mBackgroundBounds.left, mBackgroundBounds.top, right, mBackgroundBounds.bottom, mBackgroundPaint);
-                canvas.restore();
+//                canvas.restore();
                 mBackgroundPaint.setXfermode(null);
                 break;
             default:
@@ -351,63 +351,6 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
     public void setMaxProgress(int maxProgress) {
         mMaxProgress = maxProgress;
     }
-
-//    @Override
-//    public void onRestoreInstanceState(Parcelable state) {
-//        SavedState ss = (SavedState) state;
-//        super.onRestoreInstanceState(ss.getSuperState());
-//        mState = ss.state;
-//        mProgress = ss.progress;
-//        mCurrentText = ss.currentText;
-//    }
-//
-//    @Override
-//    public Parcelable onSaveInstanceState() {
-//        Parcelable superState = super.onSaveInstanceState();
-//        return new SavedState(superState, (int) mProgress, mState, mCurrentText.toString());
-//    }
-//
-//    public static class SavedState extends BaseSavedState {
-//
-//        private int progress;
-//        private int state;
-//        private String currentText;
-//
-//        public SavedState(Parcelable parcel, int progress, int state, String currentText) {
-//            super(parcel);
-//            this.progress = progress;
-//            this.state = state;
-//            this.currentText = currentText;
-//        }
-//
-//        private SavedState(Parcel in) {
-//            super(in);
-//            progress = in.readInt();
-//            state = in.readInt();
-//            currentText = in.readString();
-//        }
-//
-//        @Override
-//        public void writeToParcel(Parcel out, int flags) {
-//            super.writeToParcel(out, flags);
-//            out.writeInt(progress);
-//            out.writeInt(state);
-//            out.writeString(currentText);
-//        }
-//
-//        public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
-//
-//            @Override
-//            public SavedState createFromParcel(Parcel in) {
-//                return new SavedState(in);
-//            }
-//
-//            @Override
-//            public SavedState[] newArray(int size) {
-//                return new SavedState[size];
-//            }
-//        };
-//    }
 
     private int dp2px(int dp) {
         float density = getContext().getResources().getDisplayMetrics().density;

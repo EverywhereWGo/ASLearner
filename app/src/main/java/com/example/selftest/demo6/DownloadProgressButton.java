@@ -78,11 +78,11 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
     private void initAttrs(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DownloadProgressButton);
         try {
-            mBackgroundColor = a.getColor(R.styleable.DownloadProgressButton_progress_btn_background_color, Color.parseColor("#3385FF"));
-            mBackgroundSecondColor = a.getColor(R.styleable.DownloadProgressButton_progress_btn_background_second_color, Color.parseColor("#E8E8E8"));
+            mBackgroundColor = a.getColor(R.styleable.DownloadProgressButton_progress_btn_background_color, Color.parseColor("#12cdb0"));
+            mBackgroundSecondColor = a.getColor(R.styleable.DownloadProgressButton_progress_btn_background_second_color, Color.parseColor("#CCCCCC"));
             mButtonRadius = a.getDimension(R.styleable.DownloadProgressButton_progress_btn_radius, 0);
-            mTextColor = a.getColor(R.styleable.DownloadProgressButton_progress_btn_text_color, mBackgroundColor);
-            mTextCoverColor = a.getColor(R.styleable.DownloadProgressButton_progress_btn_text_cover_color, Color.WHITE);
+            mTextColor = a.getColor(R.styleable.DownloadProgressButton_progress_btn_text_color, Color.WHITE);
+            mTextCoverColor = a.getColor(R.styleable.DownloadProgressButton_progress_btn_text_cover_color, Color.GRAY);
             mBorderWidth = a.getDimension(R.styleable.DownloadProgressButton_progress_btn_border_width, dp2px(2));
         } finally {
             a.recycle();
@@ -164,7 +164,6 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
                 //计算当前的进度
                 mProgressPercent = mProgress / (mMaxProgress + 0f);
                 mBackgroundPaint.setColor(mBackgroundSecondColor);
-                canvas.save();
                 //画出dst图层
                 canvas.drawRoundRect(mBackgroundBounds, mButtonRadius, mButtonRadius, mBackgroundPaint);
                 //设置图层显示模式为 SRC_ATOP
@@ -175,7 +174,6 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
                 float right = mBackgroundBounds.right * mProgressPercent;
                 //在dst画出src矩形
                 canvas.drawRect(mBackgroundBounds.left, mBackgroundBounds.top, right, mBackgroundBounds.bottom, mBackgroundPaint);
-                canvas.restore();
                 mBackgroundPaint.setXfermode(null);
                 break;
             default:
@@ -192,12 +190,12 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
         final float textWidth = mTextPaint.measureText(mCurrentText.toString());
         //color
         switch (mState) {
+            case STATE_PAUSE:
             case STATE_NORMAL:
                 mTextPaint.setShader(null);
                 mTextPaint.setColor(mTextCoverColor);
                 canvas.drawText(mCurrentText.toString(), (getMeasuredWidth() - textWidth) / 2, y, mTextPaint);
                 break;
-            case STATE_PAUSE:
             case STATE_DOWNLOADING:
                 //进度条压过距离
                 float coverLength = getMeasuredWidth() * mProgressPercent;
@@ -260,10 +258,10 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
      * 设置带下载进度的文字
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void setProgressText(String text, float progress) {
+    public void setProgressText(float progress) {
         if (progress >= mMinProgress && progress <= mMaxProgress) {
-            DecimalFormat format = new DecimalFormat("##0.0");
-            mCurrentText = text + format.format(progress) + "%";
+            DecimalFormat format = new DecimalFormat("##0.##");
+            mCurrentText = format.format(progress) + "%";
             mToProgress = progress;
             if (mProgressAnimation.isRunning()) {
                 mProgressAnimation.resume();
@@ -275,7 +273,7 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
             mProgress = 0;
         } else if (progress > mMaxProgress) {
             mProgress = 100;
-            mCurrentText = text + progress + "%";
+            mCurrentText = progress + "%";
             invalidate();
         }
     }

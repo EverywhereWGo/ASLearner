@@ -11,9 +11,38 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        
+        dimension "default"
     }
-
+//    sourceSets {
+//        main {
+//            res.srcDirs('src/main/res')
+//        }
+//        My_APP {
+//            res.srcDirs('src/myapp/res')
+//        }
+//        Your_APP {
+//            res.srcDirs('src/yourapp/res')
+//        }
+//    }
+    flavorDimensions "default"
+    productFlavors {
+        My_APP {
+            applicationId "com.example.selftest.myapp"
+            resValue "string", "app_name", "APP我的"
+            buildConfigField "String", "BASE_SERVER_URL", '"http://example.com"'
+            versionCode 1
+            versionName "1.0"
+            dimension "default"
+        }
+        Your_APP {
+            applicationId "com.example.selftest.yourapp"
+            resValue "string", "app_name", "APP你的"
+            buildConfigField "String", "BASE_SERVER_URL", '"http://example.com"'
+            versionCode 2
+            versionName "1.0"
+            dimension "default"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -48,7 +77,9 @@ dependencies {
     implementation "org.greenrobot:eventbus:3.2.0"
     implementation 'com.liulishuo.filedownloader:library:1.7.7'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+//    implementation 'com.android.support:design:28.0.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
+

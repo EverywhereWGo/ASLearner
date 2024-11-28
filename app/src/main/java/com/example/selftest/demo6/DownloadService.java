@@ -98,7 +98,7 @@ public class DownloadService extends Service{
 
                     @Override
                     protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-                        int progress = (int) ((soFarBytes * 1.0f / totalBytes) * 100);
+                        Float progress = (Float) ((soFarBytes * 1.0f / totalBytes) * 100);
                         EventBus.getDefault().post(new UpdateProgressEvent(progress));
                         Log.d(TAG, "progress: " + progress + "%");
                         updateNotification("下载中", progress);
@@ -159,14 +159,14 @@ public class DownloadService extends Service{
         return builder.build();
     }
 
-    private void updateNotification(String title, int progress) {
+    private void updateNotification(String title, float progress) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(progress == 100 ? "下载完成" : "正在下载...")
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), android.R.drawable.stat_sys_download))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setProgress(100, progress, false);
+                .setProgress(100, (int) progress, false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             builder.setChannelId(CHANNEL_ID);
         }

@@ -4,19 +4,19 @@ package com.example.selftest.demo6;
  * @author LMH
  */
 public class UpdateProgressEvent {
-    public UpdateProgressEvent(int progress) {
+    public UpdateProgressEvent(Float progress) {
         this.progress = progress;
     }
 
-    public int getProgress() {
+    public Float getProgress() {
         return progress;
     }
 
-    public void setProgress(int progress) {
+    public void setProgress(Float progress) {
         this.progress = progress;
     }
 
-    int progress;
+    Float progress;
 
     public UpdateProgressEvent() {
     }

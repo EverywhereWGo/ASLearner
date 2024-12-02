@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/xiao7_navigation"
+    app:startDestination="@+id/navigation_game">
+
+    <fragment
+        android:id="@+id/navigation_game"
+        android:name="com.example.selftest.xiao7test.ui.home.HomeFragment"
+        android:label="@string/title_game"
+        tools:layout="@layout/fragment_game" />
+
+    <fragment
+        android:id="@+id/navigation_download"
+        android:name="com.example.selftest.xiao7test.ui.download.DownloadFragment"
+        android:label="@string/title_download"
+        tools:layout="@layout/fragment_download" />
+
+    <fragment
+        android:id="@+id/navigation_mime"
+        android:name="com.example.selftest.xiao7test.ui.notifications.NotificationsFragment"
+        android:label="@string/title_mine"
+        tools:layout="@layout/fragment_mine" />
+</navigation>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#222222"
+            android:gravity="center"
+            android:text="搜索框"
+            android:textColor="@android:color/white"
+            android:textSize="30sp"
+            app:layout_scrollFlags="scroll" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="#DD012D"
+            android:gravity="center"
+            android:text="标签栏"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/xiao7_t1f1_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

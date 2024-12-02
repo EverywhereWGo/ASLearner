@@ -1,5 +1,8 @@
 package com.example.selftest.demo6;
 
+import static com.example.selftest.demo6.DownloadConstants.DOWNLOAD_STATE_COMPLETED;
+import static com.example.selftest.demo6.DownloadConstants.DOWNLOAD_STATE_PAUSED;
+import static com.example.selftest.demo6.DownloadConstants.DOWNLOAD_STATE_RUNNING;
 import static com.example.selftest.demo6.DownloadProgressButton.STATE_DOWNLOADING;
 import static com.example.selftest.demo6.DownloadProgressButton.STATE_FINISH;
 import static com.example.selftest.demo6.DownloadProgressButton.STATE_NORMAL;
@@ -18,6 +21,7 @@ import android.Manifest;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -27,6 +31,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.provider.Settings;
+import android.telephony.CellSignalStrength;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -44,14 +49,16 @@ import org.greenrobot.eventbus.ThreadMode;
 /**
  * @author LMH
  */
-public class Demo6Activity extends AppCompatActivity implements View.OnClickListener, ActivityResultCallback<ActivityResult> {
+public class Demo6Activity extends AppCompatActivity implements View.OnClickListener, ActivityResultCallback<ActivityResult>, DownloadService.DownloadObserver {
     private static final String TAG = "Demo6Activity";
     private DownloadProgressButton downloadProgressButton;
     private DownloadService.DownloadBinder downloadBinder;
+    private SharedPreferences sharedPreferences;
+    private boolean isReuseable = true;
     private boolean isBound;
     private Handler handler = new Handler(Looper.getMainLooper());
-    private boolean isRegisterd = false;
     private ActivityResultLauncher launcher;
+    private static DownloadService downloadService = DownloadService.getInstance();
     // 自定义RequestCode
     private static final int WRITE_EXTERNAL_STORAGE = 1;
     private ServiceConnection connection = new ServiceConnection() {
@@ -71,16 +78,54 @@ public class Demo6Activity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo6);
+        sharedPreferences = getSharedPreferences("download", MODE_PRIVATE);
         Intent intent = new Intent(Demo6Activity.this, DownloadService.class);
+        intent.putExtra("flag", "AC");
         bindService(intent, connection, BIND_AUTO_CREATE);
+//        downloadService.registerObserver(this);
         downloadProgressButton = findViewById(R.id.download_bt);
         downloadProgressButton.setShowBorder(false);
         downloadProgressButton.setCurrentText("安装");
+        initBtn();
         downloadProgressButton.setOnClickListener(this);
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), this);
-        if (!isRegisterd) {
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
-            isRegisterd = true;
+        }
+    }
+
+    private void initBtn() {
+        int state = sharedPreferences.getInt("state", -1);
+        float progress = sharedPreferences.getFloat("progress", -1f);
+        switch (state) {
+            case DOWNLOAD_STATE_PAUSED:
+                progress = sharedPreferences.getFloat("progress", -1f);
+                if (progress != -1f) {
+                    downloadProgressButton.setState(STATE_PAUSE);
+                    downloadProgressButton.setCurrentText("继续");
+                    downloadProgressButton.setProgress(progress);
+                    isReuseable = false;
+                } else {
+//                    Log.e(TAG, "progress", );
+                }
+                break;
+            case DOWNLOAD_STATE_RUNNING:
+                progress = sharedPreferences.getFloat("progress", -1f);
+                if (progress != -1f) {
+                    downloadProgressButton.setState(STATE_DOWNLOADING);
+                    downloadProgressButton.setProgressText(progress);
+                    isReuseable = false;
+                } else {
+                    throw new IllegalStateException("Invalid progress");
+                }
+                break;
+            case DOWNLOAD_STATE_COMPLETED:
+                downloadProgressButton.setCurrentText("下载完成");
+                downloadProgressButton.setState(STATE_FINISH);
+                isReuseable = true;
+                break;
+            default:
+                break;
         }
     }
 
@@ -150,12 +195,21 @@ public class Demo6Activity extends AppCompatActivity implements View.OnClickList
                             downloadProgressButton.setCurrentText("继续");
                             break;
                         case STATE_PAUSE:
-                            downloadBinder.resumeDownload();
+                            if (isReuseable) {
+                                downloadBinder.resumeDownload();
+                            }else {
+                                startDownload();
+                            }
                             downloadProgressButton.setState(STATE_DOWNLOADING);
                             break;
                         case STATE_FINISH:
                             downloadProgressButton.setState(STATE_NORMAL);
                             downloadProgressButton.setCurrentText("安装");
+                            downloadProgressButton.setProgress(0f);
+                            SharedPreferences.Editor edit = sharedPreferences.edit();
+                            edit.clear();
+                            edit.commit();
+                            isReuseable = true;
                             break;
                         default:
                             break;
@@ -188,20 +242,35 @@ public class Demo6Activity extends AppCompatActivity implements View.OnClickList
         downloadProgressButton.setState(com.example.selftest.demo3d.DownloadProgressButton.STATE_FINISH);
         downloadProgressButton.setCurrentText("下载完成");
     }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPauseEvent(PauseDownloadEvent event){
+        float progress = event.getProgress();
+        downloadProgressButton.setProgress(progress);
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (isBound) {
-            unbindService(connection);
+//            unbindService(connection);
             isBound = false;
         }
         if (handler != null) {
             handler.removeCallbacksAndMessages(null);
         }
-        if (isRegisterd) {
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
-            isRegisterd = false;
         }
+        downloadService.unregisterObserver(this);
+    }
+
+    @Override
+    public void onDownloadStateChanged() {
+
+    }
+
+    @Override
+    public void onDownloadProgressChanged() {
+
     }
 }

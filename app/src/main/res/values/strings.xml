@@ -13,4 +13,8 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="download">下载</string>
     <string name="download_complete">下载完成</string>
+    <string name="title_activity_xiao7_test">Xiao7TestActivity</string>
+    <string name="title_game">游戏</string>
+    <string name="title_download">下载</string>
+    <string name="title_mine">我的</string>
 </resources>

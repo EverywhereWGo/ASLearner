@@ -28,7 +28,6 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
     private static final String TAG = "DialogActivity";
     private MyDialog myDialog;
     private Button mBtn;
-    private boolean isRegistered = false;
     
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,9 +36,8 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
         mBtn = findViewById(R.id.dialog_button_demo2);
         mBtn.setOnClickListener(this);
         // 注册EventBus订阅者
-        if (!isRegistered) {
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
-            isRegistered = true;
         } else {
             // 返回其他失败处理或者提示
         }
@@ -47,9 +45,9 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     protected void onDestroy() {
-        if (isRegistered) {
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
-            isRegistered = false;
+
         }
         super.onDestroy();
     }

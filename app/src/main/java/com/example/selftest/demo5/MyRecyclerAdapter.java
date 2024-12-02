@@ -15,6 +15,9 @@ import com.example.selftest.R;
 
 import java.util.List;
 
+/**
+ * @author LMH
+ */
 public class MyRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_TEXT = 0;
     private static final int TYPE_RECYCLER_VIEW = 1;

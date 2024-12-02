@@ -1,5 +1,4 @@
-package com.example.selftest.magicindicator;
-
+package com.example.selftest.xiao7test.ui.home;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -12,12 +11,11 @@ import java.util.List;
 /**
  * @author LMH
  */
-public class MyPagerAdapter extends FragmentStateAdapter {
-
+public class Tab1PagerAdapter extends FragmentStateAdapter {
     // 存储要展示的Fragment列表
     private List<Fragment> fragmentList = new ArrayList<>();
 
-    public MyPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+    public Tab1PagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
 

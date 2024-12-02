@@ -301,6 +301,7 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
 
     public void setProgress(float progress) {
         this.mProgress = progress;
+        invalidate();
     }
 
     public float getButtonRadius() {

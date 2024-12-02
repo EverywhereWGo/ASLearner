@@ -118,7 +118,7 @@ public class DownloadProgressButton extends androidx.appcompat.widget.AppCompatT
 
     private void setupAnimations() {
         //ProgressBar的动画
-        mProgressAnimation = ValueAnimator.ofFloat(0, 1).setDuration(500);
+        mProgressAnimation = ValueAnimator.ofFloat(0f, 1f).setDuration(500);
         mProgressAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {

@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import com.example.selftest.R;
 import com.example.selftest.circleindicator.CircleIndicatorActivity;
+import com.example.selftest.coordinatorlayout.CoordinatorLayoutActivity;
 import com.example.selftest.demo1b.Demo1bActivity;
 import com.example.selftest.demo3b.Demo3bActivity;
 import com.example.selftest.demo3c.Demo3cActivity;
@@ -28,12 +29,16 @@ import com.example.selftest.notification.NotificationActivity;
 import com.example.selftest.service.ServiceActivity;
 import com.example.selftest.swiperecyclerview.SwipeRecyclerViewActivity;
 import com.example.selftest.viewpager.ViewPagerActivity;
+import com.example.selftest.xiao7test.Xiao7TestActivity;
 import com.example.selftest.xrecyclerview.XRecyclerViewActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author LMH
+ */
 public class RootAcvitity extends AppCompatActivity {
     private List<Activity> activityList = new ArrayList<>(Arrays.asList(
             new NotificationActivity(), new ServiceActivity(), new ViewPagerActivity()
@@ -41,7 +46,8 @@ public class RootAcvitity extends AppCompatActivity {
             , new ExternalStorageActivity(), new MagicIndicatorActivity(), new CircleIndicatorActivity()
             , new Demo1bActivity(), new DialogActivity(), new FilletPicActivity(), new Demo3bActivity()
             , new Demo3cActivity(), new Demo3dActivity(), new Demo4aActivity(), new DownloadButtonActivity()
-            , new Demo4bActivity(), new Demo5Activity(), new Demo6Activity(), new Demo7Activity()
+            , new Demo4bActivity(), new Demo5Activity(), new Demo6Activity(), new Demo7Activity(), new CoordinatorLayoutActivity()
+            , new Xiao7TestActivity()
     ));
 
     @Override
